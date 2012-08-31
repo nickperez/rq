@@ -326,8 +326,7 @@ class ActiveQueue(Queue):
 
         This is different from normal job enqueueing, since it's active etc etc write a better description later, peace.
         """
-        #TODO: difference between now and enqueued_at to get time elapsed
-        job.time_elapsed = times.now()
+        job.time_elapsed = times.now() - job.enqueued_at
         return self.enqueue_job(job, timeout=job.timeout)
         
     def remove(self, job_id):
