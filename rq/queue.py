@@ -330,6 +330,6 @@ class ActiveQueue(Queue):
         return self.enqueue_job(job, timeout=job.timeout)
         
     def remove(self, job_id):
-        cancel_job(self.connection, job_id)
+        cancel_job(job_id, self.connection)
         #Does cancellation of active items need to be handled differently? figure it out later
         
