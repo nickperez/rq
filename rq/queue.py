@@ -320,14 +320,6 @@ class FailedQueue(Queue):
 class ActiveQueue(Queue):
     def __init__(self, connection=None):
         super(ActiveQueue, self).__init__('active', connection=connection)
-
-    def quarantine(self, job):
-        """Puts the given Job in the active queue.
-
-        This is different from normal job enqueueing, since it's active etc etc write a better description later, peace.
-        """
-        job.time_elapsed = times.now() - job.enqueued_at
-        return self.enqueue_job(job, timeout=job.timeout)
         
     def remove(self, job_id):
         cancel_job(job_id, self.connection)
