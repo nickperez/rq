@@ -322,15 +322,15 @@ class ActiveQueue(Queue):
         super(ActiveQueue, self).__init__('active', connection=connection)
 
     def quarantine(self, job):
-        """Puts the given Job in quarantine (i.e. put it on the failed
-        queue).
+        """Puts the given Job in the active queue.
 
-        This is different from normal job enqueueing, since certain meta data
-        must not be overridden (e.g. `origin` or `enqueued_at`) and other meta
-        data must be inserted (`ended_at` and `exc_info`).
+        This is different from normal job enqueueing, since it's active etc etc write a better description later, peace.
         """
         #TODO: difference between now and enqueued_at to get time elapsed
         job.time_elapsed = times.now()
         return self.enqueue_job(job, timeout=job.timeout)
         
-    #Does cancellation need to be handled differently? figure it out later
+    def remove(self, job_id):
+        #Does cancellation need to be handled differently? figure it out later
+        self.connection.lrem(self.key, job_id)
+        
