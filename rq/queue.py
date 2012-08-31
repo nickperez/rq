@@ -1,6 +1,6 @@
 import times
 from .connections import resolve_connection
-from .job import Job, Status
+from .job import Job, Status, cancel_job
 from .exceptions import NoSuchJobError, UnpickleError, InvalidJobOperationError
 from .compat import total_ordering
 
