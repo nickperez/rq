@@ -17,6 +17,7 @@ try:
     Logger = Logger   # Does nothing except it shuts up pyflakes annoying error
 except ImportError:
     from logging import Logger
+#Add get_active_queue here!
 from .queue import Queue, get_failed_queue
 from .connections import get_current_connection
 from .job import Status
@@ -114,6 +115,7 @@ class Worker(object):
         self._stopped = False
         self.log = Logger('worker')
         self.failed_queue = get_failed_queue(connection=self.connection)
+        #set self.active_queue here!
 
         # By default, push the "move-to-failed-queue" exception handler onto
         # the stack
@@ -318,6 +320,7 @@ class Worker(object):
                     continue
 
                 self.state = 'busy'
+                #Add active queue push here!
 
                 job, queue = result
                 self.log.info('%s: %s (%s)' % (green(queue.name),
