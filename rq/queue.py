@@ -9,6 +9,10 @@ def get_failed_queue(connection=None):
     """Returns a handle to the special failed queue."""
     return FailedQueue(connection=connection)
 
+def get_active_queue(connection=None):
+    """Returns a handle to the special active queue."""
+    return ActiveQueue(connection=connection)
+
 
 def compact(lst):
     return [item for item in lst if item is not None]
@@ -312,3 +316,21 @@ class FailedQueue(Queue):
         job.exc_info = None
         q = Queue(job.origin, connection=self.connection)
         q.enqueue_job(job, timeout=job.timeout)
+        
+class ActiveQueue(Queue):
+    def __init__(self, connection=None):
+        super(ActiveQueue, self).__init__('active', connection=connection)
+
+    def quarantine(self, job):
+        """Puts the given Job in quarantine (i.e. put it on the failed
+        queue).
+
+        This is different from normal job enqueueing, since certain meta data
+        must not be overridden (e.g. `origin` or `enqueued_at`) and other meta
+        data must be inserted (`ended_at` and `exc_info`).
+        """
+        #TODO: difference between now and enqueued_at to get time elapsed
+        job.time_elapsed = times.now()
+        return self.enqueue_job(job, timeout=job.timeout)
+        
+    #Does cancellation need to be handled differently? figure it out later
